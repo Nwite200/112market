@@ -61,7 +61,7 @@ export function AnnouncementBar({ message, href }: AnnouncementBarProps) {
   }
 
   return (
-    <div className="relative z-40 border-b border-line bg-brand-900 text-white">
+    <div className="relative z-40 bg-brand-900 text-white">
       <div className="container-page flex items-center gap-4 py-2">
         <div className="no-scrollbar flex flex-1 items-center gap-6 overflow-x-auto text-xs sm:text-[0.8rem]">
           {loading && !items.length ? (
@@ -100,6 +100,7 @@ export function AnnouncementBar({ message, href }: AnnouncementBarProps) {
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
+      <div className="brand-swoosh" aria-hidden="true" />
     </div>
   )
 }

@@ -22,7 +22,8 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="mt-auto border-t border-line bg-white">
+    <footer className="mt-auto bg-white">
+      <div className="brand-swoosh" aria-hidden="true" />
       <div className="container-page py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">

@@ -108,7 +108,7 @@ export default function Navbar() {
             >
               <ShoppingBag className="h-5 w-5" aria-hidden="true" />
               {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent-500 px-1 text-[0.65rem] font-bold text-white ring-2 ring-surface">
+                <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent-500 px-1 text-[0.65rem] font-bold text-brand-900 ring-2 ring-surface">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}

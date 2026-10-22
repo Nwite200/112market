@@ -65,7 +65,7 @@
   }
 
   .btn-accent {
-    @apply btn bg-accent-500 text-white shadow-soft hover:bg-accent-600 active:scale-[0.98];
+    @apply btn bg-accent-500 text-brand-900 shadow-soft hover:bg-accent-400 active:scale-[0.98];
   }
 
   .btn-ghost {
@@ -83,6 +83,11 @@
   /* Surfaces ------------------------------------------------------ */
   .card {
     @apply rounded-xl2 border border-line bg-surface shadow-soft;
+  }
+
+  /* Thin orange-to-navy line that echoes the swooshes under the logo's "112". */
+  .brand-swoosh {
+    @apply h-[3px] w-full bg-gradient-to-r from-accent-500 via-accent-400 to-brand-700;
   }
 
   .eyebrow {
@@ -121,6 +126,30 @@
 
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* First-visit logo reveal (see LogoIntro). Opacity and transform only, so it
+   runs on the compositor. Timings are set inline from LogoIntro's constants. */
+@keyframes brand-intro-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes brand-intro-out {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
