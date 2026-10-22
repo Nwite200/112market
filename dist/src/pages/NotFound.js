@@ -1,0 +1,4 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+export default function NotFound() {
+    return (_jsx("div", { className: "min-h-screen bg-background p-6", children: _jsxs("div", { className: "max-w-md mx-auto text-center", children: [_jsx("h1", { className: "text-4xl font-bold text-error mb-2", children: "Page Not Found" }), _jsx("p", { className: "text-lg text-muted-foreground", children: "The page you're looking for doesn't exist." }), _jsxs("div", { className: "mt-6", children: [_jsx("button", { onClick: () => window.history.back(), className: "rounded border-primary px-4 py-2 text-sm font-medium hover:bg-primary/10 transition-colors", children: "Go Back" }), _jsx("button", { onClick: () => window.location.href = "/", className: "rounded border-secondary px-4 py-2 text-sm font-medium hover:bg-secondary/10 transition-colors mt-2", children: "Go to Home" })] })] }) }));
+}
