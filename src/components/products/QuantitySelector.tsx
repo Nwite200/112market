@@ -1,0 +1,59 @@
+import { Minus, Plus } from "lucide-react"
+
+interface QuantitySelectorProps {
+  value: number
+  onChange: (value: number) => void
+  min?: number
+  max?: number
+  label?: string
+  disabled?: boolean
+}
+
+/** Accessible quantity stepper used on the product page and in the cart. */
+export default function QuantitySelector({
+  value,
+  onChange,
+  min = 1,
+  max = 99,
+  label = "Quantity",
+  disabled = false,
+}: QuantitySelectorProps) {
+  const clamp = (next: number) => Math.min(Math.max(next, min), max)
+
+  return (
+    <div className="inline-flex items-center rounded-full border border-line bg-white">
+      <span className="sr-only" id="quantity-label">
+        {label}
+      </span>
+      <button
+        type="button"
+        onClick={() => onChange(clamp(value - 1))}
+        disabled={disabled || value <= min}
+        aria-label="Decrease quantity"
+        className="flex h-11 w-11 items-center justify-center rounded-l-full text-ink transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <Minus className="h-4 w-4" aria-hidden="true" />
+      </button>
+      <input
+        type="number"
+        inputMode="numeric"
+        min={min}
+        max={max}
+        value={value}
+        disabled={disabled}
+        aria-labelledby="quantity-label"
+        onChange={(event) => onChange(clamp(Number(event.target.value) || min))}
+        className="w-14 border-0 bg-transparent p-0 text-center text-sm font-bold text-ink focus:ring-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+      <button
+        type="button"
+        onClick={() => onChange(clamp(value + 1))}
+        disabled={disabled || value >= max}
+        aria-label="Increase quantity"
+        className="flex h-11 w-11 items-center justify-center rounded-r-full text-ink transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <Plus className="h-4 w-4" aria-hidden="true" />
+      </button>
+    </div>
+  )
+}

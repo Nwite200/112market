@@ -1,2 +1,1 @@
-import React from "react";
-export default function Navbar(): React.JSX.Element;
+export default function Navbar(): import("react").JSX.Element;

@@ -1,36 +1,48 @@
-import { ReactContext } from "react";
-import type { Product } from "../types";
-interface ProductContextState {
+import { type ReactNode } from "react";
+import type { CartItem, FilterState, Product, Shipment } from "../types";
+export interface ProductContextValue {
     products: Product[];
     loading: boolean;
     error: string | null;
-    loadProducts: (filters?: any) => Promise<void>;
-    refreshProducts: () => Promise<void>;
+    refresh: () => Promise<void>;
 }
-interface FilterContextState {
+export declare const useProductContext: () => ProductContextValue;
+export declare const ProductProvider: ({ children }: {
+    children: ReactNode;
+}) => import("react").JSX.Element;
+export declare const DEFAULT_FILTERS: FilterState;
+export interface FilterContextValue {
     filters: FilterState;
-    setFilters: (updates: Partial<FilterState>) => void;
+    setFilters: (patch: Partial<FilterState>) => void;
+    replaceFilters: (filters: FilterState) => void;
     resetFilters: () => void;
 }
-interface ShippingContextState {
+export declare const useFilterContext: () => FilterContextValue;
+export declare const FilterProvider: ({ children }: {
+    children: ReactNode;
+}) => import("react").JSX.Element;
+export interface ShippingContextValue {
     shipments: Shipment[];
     loading: boolean;
     error: string | null;
-    refreshShipments: () => Promise<void>;
 }
-declare const ProductContext: ReactContext<ProductContextState>;
-declare const FilterContext: ReactContext<FilterContextState>;
-declare const ShippingContext: ReactContext<ShippingContextState>;
-export declare const ProductProvider: ({ children }: {
-    children: React.ReactNode;
-}) => ProductContext.Provider;
-export declare const FilterProvider: ({ children }: {
-    children: React.ReactNode;
-}) => FilterContext.Provider;
+export declare const useShippingContext: () => ShippingContextValue;
 export declare const ShippingProvider: ({ children }: {
-    children: React.ReactNode;
-}) => ShippingContext.Provider;
-export declare const useProductContext: () => ProductContextState;
-export declare const useFilterContext: () => FilterContextState;
-export declare const useShippingContext: () => ShippingContextState;
-export { ProductContext, FilterContext, ShippingContext };
+    children: ReactNode;
+}) => import("react").JSX.Element;
+export interface CartContextValue {
+    cart: CartItem[];
+    addItem: (product: Product, quantity?: number, variantId?: string) => void;
+    removeItem: (productId: string, variantId?: string) => void;
+    updateQuantity: (productId: string, quantity: number, variantId?: string) => void;
+    clearCart: () => void;
+    cartCount: number;
+    cartTotal: number;
+}
+export declare const useCartContext: () => CartContextValue;
+export declare const CartProvider: ({ children }: {
+    children: ReactNode;
+}) => import("react").JSX.Element;
+export declare const ShopProvider: ({ children }: {
+    children: ReactNode;
+}) => import("react").JSX.Element;

@@ -3,8 +3,16 @@
  * 112 Market - UK to Nigeria fairly used household items.
  */
 
-import type { Product, ProductImage, ProductVariant, VariantValue, VariantOption } from "../../src/types"
-import type { Shipment } from "../../src/types"
+import type {
+  Product,
+  ProductImage,
+  ProductVariant,
+  VariantValue,
+  VariantOption,
+  ConditionGrade,
+  FulfillmentType,
+} from "../src/types"
+import type { Shipment } from "../src/types"
 
 /** Map a database products row to a domain Product */
 export function mapProduct(row: Record<string, unknown>): Product {
@@ -21,8 +29,8 @@ export function mapProduct(row: Record<string, unknown>): Product {
   const originalPrice = row.originalPrice !== undefined ? Number(row.originalPrice) : undefined
   const currency = (row.currency as string) || "NGN"
   const images = row.images as string[] || []
-  const imageAssets = row.imageAssets
-    ?.map((a: Record<string, unknown>) => ({
+  const imageAssets = (row.imageAssets as Record<string, unknown>[] | undefined)
+    ?.map((a: Record<string, unknown>): ProductImage => ({
       id: a.id as string || crypto.randomUUID(),
       url: a.url as string || "",
       alt: a.alt as string | undefined,
@@ -34,7 +42,7 @@ export function mapProduct(row: Record<string, unknown>): Product {
       mimeType: a.mimeType as string | undefined,
       sizeBytes: a.sizeBytes === Number(a.sizeBytes) ? Number(a.sizeBytes) : undefined,
     }))
-    .filter((a): a is ProductImage => a.url !== undefined) || []
+    .filter((a) => Boolean(a.url)) || []
   const specifications = row.specifications as string[] || []
   const accessories = row.accessories as string[] || []
   const stockQuantity = Number(row.stockQuantity) || 0
@@ -79,8 +87,8 @@ export function mapProduct(row: Record<string, unknown>): Product {
     popularity,
     createdAt,
     depositAmount,
-    variants: row.variants,
-    variantOptions: row.variantOptions,
+    variants: row.variants as ProductVariant[] | undefined,
+    variantOptions: row.variantOptions as VariantOption[] | undefined,
   }
 }
 
@@ -139,5 +147,5 @@ export function mapVariantOptions(rows: Record<string, unknown>[]): VariantOptio
     id: row.id as string || crypto.randomUUID(),
     name: row.name as string || "Unnamed Option",
     values: (row.values as Array<{ id: string; label: string; color?: string; imageUrl?: string }>) || [],
-  })
+  }))
 }

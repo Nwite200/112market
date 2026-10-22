@@ -1,145 +1,380 @@
-import React from "react"
-import { useParams } from "react-router-dom"
+import { useEffect, useMemo, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import {
+  ArrowLeft,
+  BadgeCheck,
+  ClipboardList,
+  Info,
+  MapPin,
+  Package,
+  ShieldCheck,
+  Truck,
+} from "lucide-react"
 import { useProductContext } from "../context/ShopContext"
-import { useFilterContext } from "../context/ShopContext"
-import { productRepository } from "../services/catalogImpl"
-import { formatPrice, getConditionGradeLabel, getStockWarning } from "../services/sections"
 import { useAddToCart } from "../hooks/useAddToCart"
+import { useDocumentMeta } from "../hooks/useDocumentMeta"
+import {
+  formatPrice,
+  getAvailability,
+  getConditionGradeLabel,
+  getDiscountPercent,
+} from "../services/sections"
+import ProductGallery, { type GalleryImage } from "../components/products/ProductGallery"
+import VariantSelector, { findVariant, isSelectionComplete } from "../components/products/VariantSelector"
+import QuantitySelector from "../components/products/QuantitySelector"
+import ConditionBadge from "../components/ui/ConditionBadge"
+import Breadcrumbs from "../components/ui/Breadcrumbs"
+import EmptyState from "../components/ui/EmptyState"
+
+const CONDITION_LABEL = {
+  A: "https://schema.org/NewCondition",
+  B: "https://schema.org/UsedCondition",
+  C: "https://schema.org/UsedCondition",
+} as const
 
 export default function ProductDetail() {
-  const { slug } = useParams<{ slug: string }>()
-  const { products, loading } = useProductContext()
-  const { setFilters } = useFilterContext()
-  const { addToCart } = useAddToCart()
+  const { slug = "" } = useParams<{ slug: string }>()
+  const { products, loading, error } = useProductContext()
+  const { addToCart, isAdded } = useAddToCart()
 
-  React.useEffect(() => {
-    if (slug) {
-      productRepository.getProductBySlug(slug).then(() => {})
-    }
+  const [quantity, setQuantity] = useState(1)
+  const [selection, setSelection] = useState<Record<string, string>>({})
+
+  const product = useMemo(
+    () => products.find((item) => item.slug === slug),
+    [products, slug]
+  )
+
+  useEffect(() => {
+    setQuantity(1)
+    setSelection({})
   }, [slug])
 
-  const product =
-    products?.find((p) => p.slug === slug) || products?.[0]
+  const variant = useMemo(
+    () => (product ? findVariant(product, selection) : undefined),
+    [product, selection]
+  )
 
-  if (!product && loading) {
+  const price = variant?.price ?? product?.price ?? 0
+  const originalPrice = variant?.originalPrice ?? product?.originalPrice
+  const currency = product?.currency ?? "NGN"
+  const stock = variant?.stockQuantity ?? product?.stockQuantity ?? 0
+  const images: GalleryImage[] = useMemo(() => {
+    if (!product) return []
+    if (product.imageAssets?.length) {
+      return [...product.imageAssets]
+        .sort((a, b) => a.position - b.position)
+        .map((asset) => ({ id: asset.id, url: asset.url, alt: asset.alt }))
+    }
+    return product.images.map((url, index) => ({
+      id: `${product.id}-${index}`,
+      url,
+      alt: `${product.name} — photo ${index + 1}`,
+    }))
+  }, [product])
+
+  const effectiveImages = useMemo(() => {
+    if (variant?.images?.length) {
+      return [
+        { id: `${variant.id}-primary`, url: variant.images[0], alt: `${product?.name} — ${variant.name ?? "selected option"}` },
+        ...images.filter((image) => image.url !== variant.images[0]),
+      ]
+    }
+    return images
+  }, [variant, images, product])
+
+  useDocumentMeta({
+    title: product ? product.name : "Product",
+    description: product
+      ? product.description.slice(0, 155)
+      : "Graded second-hand household items from 112 Market.",
+    image: effectiveImages[0]?.url,
+    canonical: product ? `/product/${product.slug}` : undefined,
+    type: "product",
+  })
+
+  useEffect(() => {
+    if (!product) return
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      image: product.images,
+      sku: product.sku,
+      brand: { "@type": "Brand", name: product.brand },
+      category: product.category,
+      itemCondition: CONDITION_LABEL[product.conditionGrade],
+      offers: {
+        "@type": "Offer",
+        price,
+        priceCurrency: currency,
+        availability:
+          stock > 0
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+        itemCondition: CONDITION_LABEL[product.conditionGrade],
+        seller: { "@type": "Organization", name: "112 Market" },
+      },
+    }
+    const script = document.createElement("script")
+    script.type = "application/ld+json"
+    script.textContent = JSON.stringify(structuredData)
+    script.dataset.productSchema = product.id
+    document.head.appendChild(script)
+    return () => {
+      script.remove()
+    }
+  }, [product, price, currency, stock])
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto my-6"></div>
-        <p className="text-muted-foreground">Loading product detail...</p>
+      <div className="container-page py-12" aria-busy="true">
+        <div className="grid gap-10 lg:grid-cols-2">
+          <div className="skeleton aspect-square w-full rounded-xl2" />
+          <div className="space-y-4">
+            <div className="skeleton h-4 w-24 rounded" />
+            <div className="skeleton h-10 w-full rounded" />
+            <div className="skeleton h-6 w-40 rounded" />
+            <div className="skeleton h-24 w-full rounded" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="container-page py-16">
+        <EmptyState
+          title="We could not load this product"
+          description={error}
+          action={
+            <Link to="/products" className="btn-primary btn-sm">
+              Back to products
+            </Link>
+          }
+        />
       </div>
     )
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <p className="text-xl text-error">Product not found</p>
+      <div className="container-page py-16">
+        <EmptyState
+          title="Product not found"
+          description="This item may have sold or been removed from the catalogue."
+          action={
+            <Link to="/products" className="btn-primary btn-sm">
+              Browse all products
+            </Link>
+          }
+        />
       </div>
     )
   }
 
-  const conditionLabel = getConditionGradeLabel(product.conditionGrade)
-  const formattedPrice = formatPrice(product.price, product.currency)
-  const stockWarning = getStockWarning(product)
+  const availability = getAvailability(product)
+  const discount = getDiscountPercent({ ...product, price })
+  const soldOut = availability.tone === "out-of-stock" && stock <= 0
+  const requiresVariant =
+    Boolean(product.variantOptions?.length) && !isSelectionComplete(product, selection)
+  const added = isAdded(product, variant?.id)
 
   return (
-    <section className="py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Product Images */}
-          <div>
-            <div className="space-y-3">
-              {product.imageAssets?.map((image, idx) => (
-                <img
-                  key={image.id}
-                  src={image.url}
-                  alt={image.alt || product.name}
-                  className="object-cover rounded w-full h-64 md:h-[400px]"
-                />
-              ))}
-              {product.images.length > 0 && product.imageAssets?.length === 0 && (
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="object-cover rounded w-full h-64 md:h-[400px]"
-                />
-              )}
-            </div>
+    <div className="container-page py-8 lg:py-12">
+      <Breadcrumbs
+        items={[
+          { label: "Home", to: "/" },
+          { label: "All products", to: "/products" },
+          { label: product.category, to: `/category/${product.categorySlug}` },
+          { label: product.name },
+        ]}
+      />
 
-            {/* Thumbnail gallery */}
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {product.images?.map((imgUrl, idx) => (
-                <img
-                  key={idx}
-                  src={imgUrl}
-                  alt={`${product.name} - thumbnail ${idx + 1}`}
-                  className="cursor-pointer border rounded opacity-50 group-hover:opacity-100 transition-opacity"
-                  style={{ height: 80, objectFit: "cover" }}
-                />
-              ))}
-            </div>
-          </div>
+      <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
+        <ProductGallery
+          images={effectiveImages}
+          productName={product.name}
+          overlay={<ConditionBadge grade={product.conditionGrade} />}
+        />
 
-          {/* Product Details */}
-          <div>
-            <h1 className="text-3xl font-bold text-text mb-2">
-              {product.name}
-            </h1>
-            <p className="text-muted-foreground mb-4">{product.description || "Quality used item from UK"}</p>
+        <div>
+          <p className="eyebrow">{product.brand}</p>
+          <h1 className="mt-2 text-display-sm font-extrabold text-ink">{product.name}</h1>
 
-            {/* Condition and Price */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div>
-                <p className="text-sm text-muted-foreground">Condition</p>
-                <p className="text-lg font-medium {
-                  product.conditionGrade === "A"
-                    ? "text-primary"
-                  : product.conditionGrade === "B"
-                    ? "text-primary"
-                    : "text-warning"
-                }">
-                  {conditionLabel}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Price</p>
-                <p className="text-2xl font-bold">
-                  {formattedPrice}
-                </p>
-              </div>
-            </div>
-
-            {/* Stock status */}
-            {stockWarning && (
-              <div className="mb-6 p-3 rounded bg-warning/10">
-                <p className="text-sm text-warning">{stockWarning}</p>
-              </div>
+          <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-3xl font-extrabold tracking-tight text-ink">
+              {formatPrice(price, currency)}
+            </span>
+            {originalPrice && originalPrice > price && (
+              <>
+                <span className="text-base font-medium text-muted line-through">
+                  {formatPrice(originalPrice, currency)}
+                </span>
+                {discount !== null && (
+                  <span className="rounded-full bg-accent-100 px-2.5 py-1 text-xs font-bold text-accent-800">
+                    Save {discount}%
+                  </span>
+                )}
+              </>
             )}
+          </div>
 
-            {/* Specifications */}
-            <div className="mb-6">
-              <p className="text-sm text-muted-foreground font-medium mb-2">Specifications</p>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {product.specifications.map((spec, idx) => (
-                  <div key={idx} className="p-2 rounded border border-border">
-                    <span className="font-medium text-muted-foreground">{spec}</span>
-                  </div>
-                ))}
+          <p className="mt-2 text-sm text-muted">
+            Condition:{" "}
+            <span className="font-semibold text-ink">
+              {getConditionGradeLabel(product.conditionGrade)}
+            </span>
+            {product.warrantyDays > 0 ? ` · ${product.warrantyDays}-day warranty` : ""}
+          </p>
+
+          <p className="mt-4 leading-relaxed text-muted">{product.description}</p>
+
+          {product.variantOptions?.length ? (
+            <div className="mt-7">
+              <VariantSelector
+                product={product}
+                selection={selection}
+                onChange={(optionId, valueId) =>
+                  setSelection((current) => ({ ...current, [optionId]: valueId }))
+                }
+              />
+            </div>
+          ) : null}
+
+          <div className="mt-7 flex flex-wrap items-center gap-4">
+            <QuantitySelector
+              value={quantity}
+              onChange={setQuantity}
+              max={Math.max(1, stock || 99)}
+              disabled={soldOut}
+            />
+            <button
+              type="button"
+              onClick={() => addToCart(product, quantity, variant?.id)}
+              disabled={soldOut || requiresVariant}
+              className={`btn btn-lg flex-1 sm:flex-none ${added ? "bg-success text-white hover:bg-success" : "btn-primary"}`}
+            >
+              {soldOut
+                ? "Out of stock"
+                : requiresVariant
+                  ? "Choose an option"
+                  : added
+                    ? "Added to cart"
+                    : "Add to cart"}
+            </button>
+          </div>
+
+          {soldOut ? (
+            <p className="mt-3 text-sm font-semibold text-danger">
+              This item is currently out of stock. Check back — new stock arrives regularly.
+            </p>
+          ) : null}
+
+          <dl className="mt-8 grid gap-3 rounded-xl2 border border-line bg-white p-5 sm:grid-cols-2">
+            <div className="flex items-start gap-2.5">
+              <Package className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden="true" />
+              <div>
+                <dt className="text-xs font-bold uppercase tracking-wide text-muted">Stock</dt>
+                <dd className="text-sm font-semibold text-ink">
+                  {stock > 0 ? `${stock} available` : "Out of stock"}
+                </dd>
               </div>
             </div>
-
-            {/* Actions */}
-            <div>
-              <button
-                onClick={() => addToCart(product)}
-                className="w-full rounded border-primary px-4 py-3 text-sm font-medium hover:bg-primary/10 transition-colors"
-              >
-                Add to Cart
-              </button>
+            <div className="flex items-start gap-2.5">
+              <Truck className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden="true" />
+              <div>
+                <dt className="text-xs font-bold uppercase tracking-wide text-muted">Dispatch</dt>
+                <dd className="text-sm font-semibold text-ink">
+                  {product.dispatchLocation}
+                  {product.dispatchEta ? ` · ${product.dispatchEta}` : ""}
+                </dd>
+              </div>
             </div>
+            <div className="flex items-start gap-2.5">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden="true" />
+              <div>
+                <dt className="text-xs font-bold uppercase tracking-wide text-muted">Guarantee</dt>
+                <dd className="text-sm font-semibold text-ink">
+                  {product.warrantyDays}-day testing guarantee
+                </dd>
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden="true" />
+              <div>
+                <dt className="text-xs font-bold uppercase tracking-wide text-muted">Reference</dt>
+                <dd className="text-sm font-semibold text-ink">{product.sku}</dd>
+              </div>
+            </div>
+          </dl>
+
+          {product.estimatedArrival ? (
+            <p className="mt-3 flex items-start gap-2 rounded-xl2 bg-brand-50 p-4 text-sm text-ink">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden="true" />
+              {product.estimatedArrival}
+            </p>
+          ) : null}
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            <section>
+              <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
+                <ClipboardList className="h-4 w-4 text-brand-700" aria-hidden="true" />
+                Specifications
+              </h2>
+              <ul className="mt-3 space-y-1.5 text-sm text-muted">
+                {product.specifications.map((spec) => (
+                  <li key={spec} className="flex gap-2">
+                    <span className="text-brand-700" aria-hidden="true">
+                      •
+                    </span>
+                    {spec}
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
+                <Info className="h-4 w-4 text-brand-700" aria-hidden="true" />
+                What&apos;s included
+              </h2>
+              <ul className="mt-3 space-y-1.5 text-sm text-muted">
+                {product.accessories.map((accessory) => (
+                  <li key={accessory} className="flex gap-2">
+                    <span className="text-brand-700" aria-hidden="true">
+                      •
+                    </span>
+                    {accessory}
+                  </li>
+                ))}
+              </ul>
+              {product.meta?.length ? (
+                <ul className="mt-4 space-y-1.5 text-sm text-muted">
+                  {product.meta.map((note) => (
+                    <li key={note} className="flex gap-2">
+                      <span className="text-accent-600" aria-hidden="true">
+                        •
+                      </span>
+                      {note}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
           </div>
+
+          <Link
+            to="/products"
+            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:underline"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back to all products
+          </Link>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

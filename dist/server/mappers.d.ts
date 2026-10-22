@@ -2,8 +2,8 @@
  * Mapper functions for converting between database rows and domain types.
  * 112 Market - UK to Nigeria fairly used household items.
  */
-import type { Product, ProductImage, ProductVariant, VariantOption } from "../../src/types";
-import type { Shipment } from "../../src/types";
+import type { Product, ProductImage, ProductVariant, VariantOption } from "../src/types";
+import type { Shipment } from "../src/types";
 /** Map a database products row to a domain Product */
 export declare function mapProduct(row: Record<string, unknown>): Product;
 /** Map a database product_images row to a ProductImage */

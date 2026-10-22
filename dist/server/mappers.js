@@ -30,7 +30,7 @@ export function mapProduct(row) {
         mimeType: a.mimeType,
         sizeBytes: a.sizeBytes === Number(a.sizeBytes) ? Number(a.sizeBytes) : undefined,
     }))
-        .filter((a) => a.url !== undefined) || [];
+        .filter((a) => Boolean(a.url)) || [];
     const specifications = row.specifications || [];
     const accessories = row.accessories || [];
     const stockQuantity = Number(row.stockQuantity) || 0;

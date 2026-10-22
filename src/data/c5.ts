@@ -1,9 +1,7 @@
 import type { Product } from "../types"
+import { img } from "./images"
 
-export const img = (id: string): string =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=800&q=70`
-
-/** Product P4 - Used washing machine from UK */
+/** Product P4 - Used washing machine from a UK household */
 export const P4: Product = {
   id: "p-used-washer-001",
   sku: "SKU-NG-004",
@@ -13,44 +11,50 @@ export const P4: Product = {
   category: "Kitchen & Appliances",
   categorySlug: "kitchen",
   description:
-    "Pre-owned Beko washing machine from UK household. Grade C condition - visible wear and minor functional notes. Drum rotates, wash cycles tested. Sold as-is with 7-day testing guarantee.",
+    "Pre-owned Beko washing machine from a UK household. Grade C condition - visible wear and minor functional notes. Drum rotates and wash cycles were tested before listing. Sold as-is with a 7-day testing guarantee.",
   conditionGrade: "C",
   price: 6500,
   originalPrice: 12000,
   currency: "NGN",
   images: [
-    img("photo-1555630441-b21f0a7e0c29"),
-    img("photo-1555630441-b21f0a7e0c30"),
-    img("photo-1555630441-b21f0a7e0c31"),
+    img("photo-1626806787461-102c1bfaaea1"),
+    img("photo-1610557892470-55d9e80c0bce"),
+    img("photo-1582735689369-4fe89db7114c"),
   ],
   imageAssets: [
     {
       id: "ia-4-a",
-      url: img("photo-1555630441-b21f0a7e0c29"),
-      alt: "Beko washing machine - front view, Grade C",
+      url: img("photo-1626806787461-102c1bfaaea1"),
+      alt: "Front-load washing machine in a utility room, Grade C",
       position: 0,
       isPrimary: true,
       variantId: null,
     },
     {
       id: "ia-4-b",
-      url: img("photo-1555630441-b21f0a7e0c30"),
-      alt: "Beko washing machine - control panel",
+      url: img("photo-1610557892470-55d9e80c0bce"),
+      alt: "Washing machine drum loaded with laundry",
       position: 1,
       isPrimary: false,
       variantId: null,
     },
     {
       id: "ia-4-c",
-      url: img("photo-1555630441-b21f0a7e0c31"),
-      alt: "Beko washing machine - drum interior",
+      url: img("photo-1582735689369-4fe89db7114c"),
+      alt: "Laundry basket ready for washing machine collection",
       position: 2,
       isPrimary: false,
       variantId: null,
     },
   ],
-  specifications: ["6kg capacity", "Multiple wash programs", "Energy rating C", "Spin speed 1000 RPM"],
-  accessories: ["Inlet hose, drain hose, user manual"],
+  specifications: [
+    "6kg capacity",
+    "Multiple wash programs",
+    "Energy rating C",
+    "Spin speed 1000 RPM",
+    "220-240V",
+  ],
+  accessories: ["Inlet hose", "Drain hose", "User manual"],
   stockQuantity: 1,
   fulfillmentType: "in_stock",
   dispatchLocation: "Lagos Depot",
@@ -58,6 +62,71 @@ export const P4: Product = {
   meta: ["Grade C - Visible wear", "Sold with 7-day testing guarantee"],
   warrantyDays: 7,
   isVerified: true,
-  popularity: 33,
-  createdAt: "2024-02-15",
+  popularity: 88,
+  createdAt: "2026-02-16",
+  isFeatured: true,
+}
+
+/** Product P9 - Cookware set */
+export const P9: Product = {
+  id: "p-used-cookware-009",
+  sku: "SKU-NG-009",
+  name: "Used Cookware & Pan Set - Grade B",
+  slug: "used-cookware-pan-set-grade-b",
+  brand: "Philips",
+  category: "Kitchen & Appliances",
+  categorySlug: "kitchen",
+  description:
+    "Pre-owned non-stick cookware set from a UK kitchen. Light coating wear consistent with careful use, no peeling. Suitable for gas and electric hobs.",
+  conditionGrade: "B",
+  price: 18000,
+  currency: "NGN",
+  images: [
+    img("photo-1622480916113-9000ac49b79d"),
+    img("photo-1556909114-f6e7ad7d3136"),
+    img("photo-1556909212-d5b604d0c90d"),
+  ],
+  imageAssets: [
+    {
+      id: "ia-9-a",
+      url: img("photo-1622480916113-9000ac49b79d"),
+      alt: "Non-stick frying pan in use, Grade B",
+      position: 0,
+      isPrimary: true,
+      variantId: null,
+    },
+    {
+      id: "ia-9-b",
+      url: img("photo-1556909114-f6e7ad7d3136"),
+      alt: "Cookware being used on a kitchen hob",
+      position: 1,
+      isPrimary: false,
+      variantId: null,
+    },
+    {
+      id: "ia-9-c",
+      url: img("photo-1556909212-d5b604d0c90d"),
+      alt: "Kitchen with pans and pots on open shelving",
+      position: 2,
+      isPrimary: false,
+      variantId: null,
+    },
+  ],
+  specifications: [
+    "8-piece set",
+    "Non-stick coating",
+    "Suitable for gas and electric hobs",
+    "Oven safe to 180C",
+  ],
+  accessories: ["Pan protectors", "Utensil set"],
+  stockQuantity: 4,
+  fulfillmentType: "in_stock",
+  dispatchLocation: "Lagos Depot",
+  dispatchEta: "Dispatch: 3-5 days",
+  meta: ["Grade B - light coating wear", "No peeling observed"],
+  warrantyDays: 14,
+  isVerified: true,
+  popularity: 67,
+  createdAt: "2026-07-06",
+  isFeatured: true,
 }

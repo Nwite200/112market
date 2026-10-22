@@ -79,6 +79,8 @@ export interface Product {
   popularity: number
   createdAt: string
   depositAmount?: number
+  /** Curated for the homepage "Featured" rail. */
+  isFeatured?: boolean
   /** When present, purchasing is variant-driven: the customer must pick one
    * value per option before adding to cart. Products without variants keep
    * the single-SKU behaviour above.
@@ -100,6 +102,21 @@ export interface Shipment {
   registryNumber: string
 }
 
+/** A browsing category backed by real catalogue data. */
+export interface Category {
+  slug: string
+  label: string
+  description: string
+  /** Cover image for category cards and the mega menu. */
+  image: string
+}
+
+/** A named filter option derived from the catalogue. */
+export interface FilterOption {
+  id: string
+  label: string
+}
+
 export interface CartItem {
   productId: string
   quantity: number
@@ -110,6 +127,12 @@ export interface CartItem {
   variantName?: string
   /** Unit price (NGN) charged for this line, snapped at add time. */
   unitPrice?: number
+  /** Snapshot of the product at add time so the cart renders without a lookup. */
+  name?: string
+  slug?: string
+  image?: string
+  conditionGrade?: ConditionGrade
+  maxQuantity?: number
 }
 
 export interface FilterState {
@@ -144,3 +167,9 @@ export const GRADE_SHORT: Record<ConditionGrade, string> = {
   B: "Grade B",
   C: "Grade C",
 }
+
+/** Dispatch/delivery locations available to customers. */
+export const LOCATION_OPTIONS = [
+  { id: "depot", label: "Lagos Depot pickup" },
+  { id: "sea", label: "Container shipment" },
+] as const

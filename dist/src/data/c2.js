@@ -1,5 +1,5 @@
-export const img = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=800&q=70`;
-/** Product P1 - Used furniture item from UK */
+import { img } from "./images";
+/** Product P1 - Used sofa from a UK household */
 export const P1 = {
     id: "p-used-sofa-001",
     sku: "SKU-NG-001",
@@ -8,46 +8,57 @@ export const P1 = {
     brand: "Ikea",
     category: "Furniture & Living",
     categorySlug: "furniture",
-    description: "Pre-owned 3-seater fabric sofa from UK household. Minor signs of use on arms and cushions. Structurally sound, good condition for continued use.",
+    description: "Pre-owned 3-seater sofa from a UK household. Minor signs of use on the arms and cushions, structurally sound and comfortable for continued use. Cleaned and re-covered before it leaves the depot.",
     conditionGrade: "B",
-    price: 8500, // in Nigerian Naira
+    price: 8500,
     originalPrice: 15000,
     currency: "NGN",
     images: [
-        img("photo-1555630441-b21f0a7e0c20"),
-        img("photo-1555630441-b21f0a7e0c21"),
-        img("photo-1555630441-b21f0a7e0c22"),
+        img("photo-1555041469-a586c61ea9bc"),
+        img("photo-1583847268964-b28dc8f51f92"),
+        img("photo-1616627561950-9f746e330187"),
     ],
     imageAssets: [
         {
             id: "ia-1-a",
-            url: img("photo-1555630441-b21f0a7e0c20"),
-            import: type
-        }, { Product }, from, "../types"
+            url: img("photo-1555041469-a586c61ea9bc"),
+            alt: "Pre-owned 3-seater sofa, Grade B, full view",
+            position: 0,
+            isPrimary: true,
+            variantId: null,
+        },
+        {
+            id: "ia-1-b",
+            url: img("photo-1583847268964-b28dc8f51f92"),
+            alt: "3-seater sofa in a bright living room setting",
+            position: 1,
+            isPrimary: false,
+            variantId: null,
+        },
+        {
+            id: "ia-1-c",
+            url: img("photo-1616627561950-9f746e330187"),
+            alt: "Close-up of sofa cushions showing light wear",
+            position: 2,
+            isPrimary: false,
+            variantId: null,
+        },
     ],
-    const: img = (id) => ,
-    const: img = (id) => , n
-} `https://images.unsplash.com/${id}?auto  
-/** Product P1 - Used furniture item from UK */
-export const P1: Prr sexport const P1: Product = {
-  id: "p-used-on: 1  id: "p-used-sofa-001",
-      sku: "SKU-NG-001",
-   }  name: "Used 3-Seaia  slug: "used-3-seater-sofa-grade-b",
-1-  brand: "Ikea",
-  category: "Furnitea  category: "Fue-  categorySlug: "furniture",
-  dit  descrip     isPrimary: fals    "Pre-ownean  conditionGrade: "B",
-  price: 8500, // in Nigerian Naira
-  originalPrice: 15000,
-  currency: "NGN",
-  images: [
-    img("photo-1555630441-b21f0a7e0cn   price: 8500, // in  s  originalPrice: 15000,
-  currency:   currency: "NGN",
-  iLo  images: [
-    ipo    img("pat    img("photo-1555630441-b21f0a7e0c21")ra    img("photo-1555630441-b21f0a7e0c22")%   ],
-  imageAssets: [
-    {
-      id: "ity  is:    {
- isVerified    ue      url: img("ph,
- import type { Product } ,
-}
-;
+    specifications: [
+        "3-seat sofa",
+        "Approx. 205W x 90D cm",
+        "UK Type G compatible",
+        "Solid wood legs",
+    ],
+    accessories: ["Matching cushion covers", "Care kit"],
+    stockQuantity: 3,
+    fulfillmentType: "in_stock",
+    dispatchLocation: "Lagos Depot",
+    dispatchEta: "Dispatch: 1-2 days",
+    meta: ["Grade B - minor signs of use", "Frame checked at depot"],
+    warrantyDays: 30,
+    isVerified: true,
+    popularity: 96,
+    createdAt: "2025-12-08",
+    isFeatured: true,
+};

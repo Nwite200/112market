@@ -1,30 +1,12 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React from "react";
-import { useProductContext } from "../context/ShopContext";
-import { useFilterContext } from "../context/ShopContext";
-import { useShippingContext } from "../context/ShopContext";
-import { getAllCategories, getAllBrands, getSpecOptionsList, getCoverageOptionsList, getConditionGradeLabel, } from "../services/sections";
-import { productRepository } from "../services/catalogImpl";
-import { ProductCard } from "../components/products/ProductCard";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import Hero from "../components/home/Hero";
+import CategoryGrid from "../components/home/CategoryGrid";
+import FeaturedProducts from "../components/home/FeaturedProducts";
+import LatestArrivals from "../components/home/LatestArrivals";
+import Promotions from "../components/home/Promotions";
+import WhyShop from "../components/home/WhyShop";
+import ProcessSteps from "../components/home/ProcessSteps";
+import SupportFaq from "../components/home/SupportFaq";
 export default function Home() {
-    const { products, loading, error } = useProductContext();
-    const { filters, setFilters } = useFilterContext();
-    const { shipments, loading: shipmentsLoading } = useShippingContext();
-    React.useEffect(() => {
-        productRepository.listProducts().then((p) => {
-            // Products loaded via repository
-        });
-    }, []);
-    const categories = getAllCategories();
-    const brands = getAllBrands();
-    const specOptions = getSpecOptionsList();
-    const coverageOptions = getCoverageOptionsList();
-    const filteredProducts = products || [];
-    return (_jsxs("section", { className: "py-12", children: [_jsx(Navbar, {}), _jsxs("div", { className: "max-w-7xl mx-auto px-4", children: [announcement, _jsxs("header", { className: "mb-12", children: [_jsx("h1", { className: "text-4xl font-bold text-text mb-3", children: "Quality Pre-Owned Household Items" }), _jsx("p", { className: "text-lg text-muted-foreground", children: "UK-sourced, carefully described delivery to Nigeria" })] }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium mb-2", children: "Category" }), _jsxs("select", { onChange: (e) => setFilters({ category: e.target.value || "all" }), className: "w-full rounded border px-3 py-2", children: [_jsx("option", { value: "all", children: "All Categories" }), Object.entries(categories).map(([slug, label]) => (_jsx("option", { value: slug, children: label }, slug)))] })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium mb-2", children: "Condition" }), _jsxs("select", { onChange: (e) => setFilters({
-                                            grades: e.target.value !== ""
-                                                ? [e.target.value]
-                                                : [],
-                                        }), className: "w-full rounded border px-3 py-2", children: [_jsx("option", { value: "", children: "All Conditions" }), _jsx("option", { value: "A", children: getConditionGradeLabel("A") }), _jsx("option", { value: "B", children: getConditionGradeLabel("B") }), _jsx("option", { value: "C", children: getConditionGradeLabel("C") })] })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium mb-2", children: "Brand" }), _jsxs("select", { onChange: (e) => setFilters({
-                                            brands: e.target.value ? [e.target.value] : [],
-                                        }), className: "w-full rounded border px-3 py-2", children: [_jsx("option", { value: "", children: "All Brands" }), brands.map((brand) => (_jsx("option", { value: brand, children: brand }, brand)))] })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium mb-2", children: "Price Range" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx("input", { type: "number", min: "0", step: "100", onChange: (e) => setFilters({ minPrice: Number(e.target.value) || 0 }), className: "rounded-l border px-3 py-2 flex-1" }), _jsx("span", { className: "text-sm text-muted-foreground", children: "-" }), _jsx("input", { type: "number", min: "0", step: "100", onChange: (e) => setFilters({ maxPrice: Number(e.target.value) || 999999 }), className: "rounded-r border px-3 py-2" })] })] })] }), _jsxs("section", { className: "mb-12", children: [_jsx("h2", { className: "text-xl font-medium text-text mb-4", children: "Shop by Category" }), _jsx("div", { className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3", children: Object.entries(categories).map(([slug, label]) => (_jsxs("button", { className: "group flex-1 flex flex-col items-center gap-2 rounded border px-4 py-3 text-sm font-medium hover:bg-primary/5 transition-colors", children: [_jsx("span", { className: "text-primary", children: label }), _jsx("p", { className: "text-xs text-muted-foreground", children: slug })] }, slug))) })] }), _jsxs("section", { className: "mb-12", children: [_jsx("h2", { className: "text-xl font-medium text-text mb-6", children: "Featured & Latest Arrivals" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4", children: [filteredProducts.map((product) => (_jsx(ProductCard, { product: product }, product.id))), filteredProducts.length === 0 && (_jsx("div", { className: "col-span-full text-center py-12", children: _jsx("p", { className: "text-muted-foreground", children: "No products match your filters. Try adjusting your search criteria." }) }))] })] }), _jsxs("section", { className: "mb-12", children: [_jsx("h2", { className: "text-xl font-medium text-text mb-6", children: "Why Shop with 112 Market?" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6", children: [_jsxs("div", { className: "p-4 rounded border border-border hover:border-primary/30 transition-colors", children: [_jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "Grade A-C" }), _jsx("p", { className: "text-muted-foreground", children: "Products graded honestly from Grade A (Like New) to Grade C (Value Tier), with detailed condition descriptions for every item." })] }), _jsxs("div", { className: "p-4 rounded border border-border hover:border-primary/30 transition-colors", children: [_jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "NGN Pricing" }), _jsx("p", { className: "text-muted-foreground", children: "All prices displayed in Nigerian Naira (NGN) with transparent original pricing shown when applicable." })] }), _jsxs("div", { className: "p-4 rounded border border-border hover:border-primary/30 transition-colors", children: [_jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "UK Source" }), _jsx("p", { className: "text-muted-foreground", children: "Items carefully sourced from the UK, with dispatch from our Lagos depot." })] }), _jsxs("div", { className: "p-4 rounded border border-border hover:border-primary/30 transition-colors", children: [_jsx("div", { className: "text-3xl font-bold text-primary mb-2", children: "Delivery Options" }), _jsx("p", { className: "text-muted-foreground", children: "Multiple delivery options available including depot delivery and container-based shipping to major Nigerian cities." })] })] })] })] })] }));
+    return (_jsxs(_Fragment, { children: [_jsx(Hero, {}), _jsx(CategoryGrid, {}), _jsx(FeaturedProducts, {}), _jsx(LatestArrivals, {}), _jsx(Promotions, {}), _jsx(WhyShop, {}), _jsx(ProcessSteps, {}), _jsx(SupportFaq, {})] }));
 }

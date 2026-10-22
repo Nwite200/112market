@@ -8,3 +8,8 @@ export const GRADE_SHORT = {
     B: "Grade B",
     C: "Grade C",
 };
+/** Dispatch/delivery locations available to customers. */
+export const LOCATION_OPTIONS = [
+    { id: "depot", label: "Lagos Depot pickup" },
+    { id: "sea", label: "Container shipment" },
+];

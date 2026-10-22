@@ -1,4 +1,5 @@
-import { applyFilters, getCategories, getBrands, getSpecOptions, getCoverageOptions, getShipments, type Product, type FilterState } from "./catalog"
+import { applyFilters, getCatalogue, getShipments, sortProducts } from "./catalog"
+import type { FilterState, Product, Shipment, SortKey } from "../types"
 
 /** Repository interface for product catalogue */
 export interface ProductRepository {
@@ -14,17 +15,19 @@ export class DemoProductRepository implements ProductRepository {
   private products: Product[]
 
   constructor() {
-    // Import all products from data files
-    const { P1, P2, P3, P4, P5, P25 } = await import("../data")
-    this.products = [P1, P2, P3, P4, P5, P25]
+    // Catalogue is loaded from the shared data module. Replace this with an
+    // API call to serve live stock without touching the UI layer.
+    this.products = getCatalogue()
   }
 
   async listProducts(filters?: FilterState): Promise<Product[]> {
-    let results = [...this.products]
-    if (filters) {
-      results = applyFilters(results, filters)
-    }
+    const results = filters ? applyFilters(this.products, filters) : [...this.products]
     return results
+  }
+
+  async listProductsSorted(sort: SortKey, filters?: FilterState): Promise<Product[]> {
+    const results = await this.listProducts(filters)
+    return sortProducts(results, sort)
   }
 
   async getProductById(id: string): Promise<Product | undefined> {
@@ -36,8 +39,7 @@ export class DemoProductRepository implements ProductRepository {
   }
 
   async searchProducts(filters: FilterState): Promise<Product[]> {
-    const products = await this.listProducts(filters)
-    return products
+    return this.listProducts(filters)
   }
 
   async listShipments(): Promise<Shipment[]> {
@@ -48,5 +50,3 @@ export class DemoProductRepository implements ProductRepository {
 /** Default repository instance */
 export const productRepository = new DemoProductRepository()
 
-/** Type exports */
-export type { ProductRepository }

@@ -1,7 +1,13 @@
-import React from "react";
 interface AnnouncementBarProps {
-    message: string;
+    message?: string;
     href?: string;
 }
-export declare function AnnouncementBar({ message, href }: AnnouncementBarProps): React.JSX.Element;
-export {};
+/**
+ * Compact store announcement strip.
+ *
+ * Everything shown here is derived from live catalogue data (container
+ * shipments, depot dispatch, condition grading) — no invented delivery
+ * windows or discounts.
+ */
+export declare function AnnouncementBar({ message, href }: AnnouncementBarProps): import("react").JSX.Element | null;
+export default AnnouncementBar;

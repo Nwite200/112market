@@ -1,0 +1,10 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
+import { getAllCategories } from "../../services/sections";
+import SectionHeading from "../ui/SectionHeading";
+/** Visual category cards that link straight to the filtered catalogue. */
+export default function CategoryGrid() {
+    const categories = getAllCategories();
+    return (_jsx("section", { id: "categories", className: "section scroll-mt-28", children: _jsxs("div", { className: "container-page", children: [_jsx(SectionHeading, { eyebrow: "Shop by category", title: "Find the room, appliance or device you need", description: "Every category below is backed by stock we have graded and photographed. Pick one to see what is available right now." }), _jsx("div", { className: "mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5", children: categories.map((category) => (_jsxs(Link, { to: `/category/${category.slug}`, className: "group relative overflow-hidden rounded-xl2 border border-line bg-brand-50 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift", children: [_jsx("div", { className: "media aspect-[4/3] w-full", children: _jsx("img", { src: category.image, alt: category.label, loading: "lazy", decoding: "async", className: "group-hover:scale-105" }) }), _jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-brand-900/85 via-brand-900/25 to-transparent" }), _jsxs("div", { className: "absolute inset-x-0 bottom-0 p-4", children: [_jsx("p", { className: "text-sm font-bold text-white", children: category.label }), _jsxs("p", { className: "mt-0.5 flex items-center gap-1 text-xs text-white/80", children: [category.count, " item", category.count === 1 ? "" : "s", _jsx(ArrowUpRight, { className: "h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5", "aria-hidden": "true" })] })] })] }, category.slug))) })] }) }));
+}

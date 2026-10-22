@@ -1,2 +1,1 @@
-import React from "react";
-export default function ProductDetail(): React.JSX.Element;
+export default function ProductDetail(): import("react").JSX.Element;
