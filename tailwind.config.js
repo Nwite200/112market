@@ -4,31 +4,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        /* 112 Market brand — deep market green (UK-sourced, Nigeria-sold) */
+        /* 112 Market brand navy, sampled from the logo's "112" and MARKET lettering.
+           800 = logo body (#012160), 600 = logo highlight (#013B97), 900 = logo shadow. */
         brand: {
-          50: "#F1F6F2",
-          100: "#E0EBE2",
-          200: "#C2D7C6",
-          300: "#9BBDA3",
-          400: "#6C9C77",
-          500: "#458054",
-          600: "#346743",
-          700: "#2A5238",
-          800: "#23422F",
-          900: "#1C3527",
+          50: "#EEF3FC",
+          100: "#DCE6F8",
+          200: "#BCCDF0",
+          300: "#8AA8E4",
+          400: "#4F7FD0",
+          500: "#1F56B8",
+          600: "#013B97",
+          700: "#022C80",
+          800: "#012160",
+          900: "#00124A",
         },
-        /* Warm secondary — used for savings, badges and accents */
+        /* Logo orange: core #FA6804, highlight #FF9906, shadow #B1310A.
+           Used for savings, badges, the cart and calls to action. */
         accent: {
-          50: "#FDF5EC",
-          100: "#FAE8D3",
-          200: "#F4CBA8",
-          300: "#EDA871",
-          400: "#E2823D",
-          500: "#D26A22",
-          600: "#B55317",
-          700: "#93400F",
-          800: "#75340F",
-          900: "#5E2C10",
+          50: "#FFF4E8",
+          100: "#FFE3C7",
+          200: "#FFC78F",
+          300: "#FFA854",
+          400: "#FF8A1E",
+          500: "#FA6804",
+          600: "#C24E00",
+          700: "#9C3E00",
+          800: "#7A3200",
+          900: "#5E2800",
         },
         /* Additional brand extensions for full site coverage */
         market: {
@@ -43,24 +45,29 @@ export default {
           800: "#505358",
           900: "#3A3C3F",
         },
+        /* Union flag navy and red, used only for the first-visit intro accent */
+        flag: {
+          navy: "#012169",
+          red: "#C8102E",
+        },
         /* Semantic storefront tokens */
-        canvas: "#FBF8F3",
+        canvas: "#F5F8FD",
         surface: "#FFFFFF",
-        ink: "#1A1714",
-        muted: "#6F6A61",
-        line: "#E8E1D6",
+        ink: "#08153A",
+        muted: "#5A6481",
+        line: "#DFE5F0",
         danger: "#B42318",
         warning: "#A15C00",
         success: "#16794A",
         /* Legacy aliases kept so existing utility classes keep working */
-        background: "#FBF8F3",
-        foreground: "#1A1714",
+        background: "#F5F8FD",
+        foreground: "#08153A",
         card: "#FFFFFF",
-        border: "#E8E1D6",
-        primary: "#2A5238",
+        border: "#DFE5F0",
+        primary: "#022C80",
         "primary-foreground": "#FFFFFF",
-        secondary: "#F1F6F2",
-        "muted-foreground": "#6F6A61",
+        secondary: "#EEF3FC",
+        "muted-foreground": "#5A6481",
         error: "#B42318",
       },
       fontFamily: {
@@ -93,10 +100,10 @@ export default {
         xl3: "1.75rem",
       },
       boxShadow: {
-        soft: "0 1px 2px rgba(26, 23, 20, 0.04), 0 8px 24px -12px rgba(26, 23, 20, 0.12)",
-        card: "0 1px 2px rgba(26, 23, 20, 0.05), 0 12px 32px -18px rgba(26, 23, 20, 0.22)",
-        lift: "0 2px 4px rgba(26, 23, 20, 0.05), 0 22px 48px -24px rgba(26, 23, 20, 0.3)",
-        overlay: "0 24px 70px -28px rgba(26, 23, 20, 0.45)",
+        soft: "0 1px 2px rgba(8, 21, 58, 0.04), 0 8px 24px -12px rgba(8, 21, 58, 0.12)",
+        card: "0 1px 2px rgba(8, 21, 58, 0.05), 0 12px 32px -18px rgba(8, 21, 58, 0.22)",
+        lift: "0 2px 4px rgba(8, 21, 58, 0.05), 0 22px 48px -24px rgba(8, 21, 58, 0.3)",
+        overlay: "0 24px 70px -28px rgba(8, 21, 58, 0.45)",
       },
       transitionTimingFunction: {
         smooth: "cubic-bezier(0.22, 1, 0.36, 1)",
@@ -118,9 +125,11 @@ export default {
           from: { opacity: "0", transform: "translateY(-8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        /* Opacity only: a lingering transform would turn the page into a containing
+           block for position:fixed children. */
         "route-fade": {
-          from: { opacity: "0", transform: "translateY(8px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
+          from: { opacity: "0" },
+          to: { opacity: "1" },
         },
         shimmer: {
           "100%": { transform: "translateX(100%)" },
@@ -131,7 +140,7 @@ export default {
         "fade-up": "fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both",
         "scale-in": "scale-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both",
         "slide-down": "slide-down 0.2s ease-out both",
-        "route-fade": "route-fade 280ms cubic-bezier(0.22, 1, 0.36, 1) both",
+        "route-fade": "route-fade 250ms cubic-bezier(0.22, 1, 0.36, 1) backwards",
         shimmer: "shimmer 1.8s infinite",
       },
     },

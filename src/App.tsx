@@ -13,7 +13,6 @@ import DeliveryReturns from "./pages/DeliveryReturns"
 import Privacy from "./pages/Privacy"
 import Terms from "./pages/Terms"
 import NotFound from "./pages/NotFound"
-import Transition from "./components/layout/Transition"
 
 /** Route table for the 112 Market storefront. */
 export const routes = [
@@ -35,15 +34,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <ShopProvider>
-        <Transition>
-          <Routes>
-            <Route element={<DefaultLayout />}>
-              {routes.map(({ path, element }) => (
-                <Route key={path} path={path} element={element} />
-              ))}
-            </Route>
-          </Routes>
-        </Transition>
+        <Routes>
+          <Route element={<DefaultLayout />}>
+            {routes.map(({ path, element }) => (
+              <Route key={path} path={path} element={element} />
+            ))}
+          </Route>
+        </Routes>
       </ShopProvider>
     </BrowserRouter>
   )

@@ -71,7 +71,7 @@ export function ProductCard({ product, className = "", priority = false }: Produ
         </div>
 
         {discount !== null && (
-          <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-accent-500 px-2.5 py-1 text-[0.7rem] font-bold text-white shadow-soft">
+          <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-accent-500 px-2.5 py-1 text-[0.7rem] font-bold text-brand-900 shadow-soft">
             −{discount}%
           </span>
         )}

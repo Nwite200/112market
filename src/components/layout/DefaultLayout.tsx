@@ -1,19 +1,21 @@
-import { useEffect } from "react"
+import { useLayoutEffect } from "react"
 import { Outlet, useLocation } from "react-router-dom"
 import AnnouncementBar from "./AnnouncementBar"
 import Navbar from "./navbar/Index"
 import Footer from "./Footer"
 import LogoIntro from "../brand/LogoIntro"
+import PageTransition from "./PageTransition"
 
 /**
  * Shared storefront shell: announcement bar, header, routed page and footer.
- * Route changes get a short 280ms fade so navigation feels responsive
- * without being distracting.
+ * The routed page fades in on every route change through `PageTransition`.
+ * The first-visit `LogoIntro` is separate and only plays once per session.
  */
 export default function DefaultLayout() {
   const location = useLocation()
 
-  useEffect(() => {
+  // Before paint, so the fade always starts from the top of the new page.
+  useLayoutEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" })
   }, [location.pathname])
 
@@ -31,9 +33,9 @@ export default function DefaultLayout() {
       <Navbar />
 
       <main id="main-content" className="flex-1">
-        <div key={location.pathname} className="animate-route-fade">
+        <PageTransition>
           <Outlet />
-        </div>
+        </PageTransition>
       </main>
 
       <Footer />

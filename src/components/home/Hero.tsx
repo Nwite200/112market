@@ -22,7 +22,7 @@ export default function Hero() {
         aria-hidden="true"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 18% 12%, rgba(42,82,56,0.12), transparent 42%), radial-gradient(circle at 82% 8%, rgba(226,130,61,0.14), transparent 46%)",
+            "radial-gradient(circle at 18% 12%, rgba(2,44,128,0.14), transparent 42%), radial-gradient(circle at 82% 8%, rgba(250,104,4,0.16), transparent 46%)",
         }}
       />
 
