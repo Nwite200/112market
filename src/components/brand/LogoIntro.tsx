@@ -100,7 +100,7 @@ export default function LogoIntro() {
       data-brand-intro
       data-state={ready ? "playing" : "loading"}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center bg-white"
+      className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center bg-brand-800"
       style={
         ready
           ? { animation: `brand-intro-out ${FADE_OUT_MS}ms ${EASE_OUT} ${FADE_IN_MS + HOLD_MS}ms both` }
