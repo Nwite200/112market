@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { LOGO_SRC } from "./Logo"
 import { useReducedMotion } from "../../hooks/useReducedMotion"
+import { useLocation } from "react-router-dom"
 
 const FADE_IN_MS = 600
 const HOLD_MS = 500
@@ -39,9 +40,21 @@ const EASE_OUT = "cubic-bezier(0.4, 0, 0.2, 1)"
  */
 export default function LogoIntro() {
   const reducedMotion = useReducedMotion()
+  const location = useLocation()
   const [visible, setVisible] = useState(() => !reducedMotion)
   const [ready, setReady] = useState(false)
+  const [lastPathname, setLastPathname] = useState("")
 
+  // Reset visible when location changes (new page navigation)
+  useEffect(() => {
+    if (lastPathname !== location.pathname) {
+      setLastPathname(location.pathname)
+      setVisible(true)
+      setReady(false)
+    }
+  }, [location.pathname, lastPathname])
+
+  // Wait (briefly) for the logo to be decoded.
   useEffect(() => {
     if (!visible) return
     if (reducedMotion) {

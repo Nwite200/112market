@@ -1,6 +1,7 @@
 import { StrictMode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { act, render } from "@testing-library/react"
+import { MemoryRouter } from "react-router-dom"
 import LogoIntro from "../LogoIntro"
 
 const KEY = "112-market-intro-seen"
@@ -21,12 +22,20 @@ afterEach(() => {
 
 describe("LogoIntro", () => {
   it("is on screen in the very first render of a new session (no flash of the page)", () => {
-    render(<LogoIntro />)
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LogoIntro />
+      </MemoryRouter>
+    )
     expect(intro()).toBeInTheDocument()
   })
 
   it("runs the 600ms fade in, 500ms hold, 700ms fade out sequence (1800ms)", async () => {
-    render(<LogoIntro />)
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LogoIntro />
+      </MemoryRouter>
+    )
     await start()
     expect(intro()).toHaveAttribute("data-state", "playing")
 
@@ -38,7 +47,11 @@ describe("LogoIntro", () => {
   })
 
   it("unmounts itself after the animation completes", async () => {
-    render(<LogoIntro />)
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LogoIntro />
+      </MemoryRouter>
+    )
     await start()
     act(() => vi.advanceTimersByTime(1800 + 200))
     expect(intro()).not.toBeInTheDocument()
@@ -54,14 +67,22 @@ describe("LogoIntro", () => {
         }
       }
     )
-    render(<LogoIntro />)
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LogoIntro />
+      </MemoryRouter>
+    )
     expect(intro()).toHaveAttribute("data-state", "loading")
     act(() => vi.advanceTimersByTime(300))
     expect(intro()).toHaveAttribute("data-state", "playing")
   })
 
   it("never blocks clicks, before, during or after", async () => {
-    render(<LogoIntro />)
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LogoIntro />
+      </MemoryRouter>
+    )
     expect(intro()).toHaveClass("pointer-events-none")
     await start()
     expect(intro()).toHaveClass("pointer-events-none")
@@ -72,15 +93,17 @@ describe("LogoIntro", () => {
   it("shows on every page navigation (not just first session)", () => {
     // Previously seen flag no longer affects visibility — intro plays on every navigation
     window.sessionStorage.setItem(KEY, "1")
-    render(<LogoIntro />)
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LogoIntro />
+      </MemoryRouter>
+    )
     expect(intro()).toBeInTheDocument()
   })
 
   it("is not left stuck on screen by React StrictMode's double effect run", async () => {
     render(
-      <StrictMode>
-        <LogoIntro />
-      </StrictMode>
+      <MemoryRouter initialEntries={["/"]}><StrictMode><LogoIntro /></StrictMode></MemoryRouter>
     )
     expect(intro()).toBeInTheDocument()
     await start()
@@ -98,7 +121,11 @@ describe("LogoIntro", () => {
         removeEventListener: vi.fn(),
       }))
     )
-    render(<LogoIntro />)
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LogoIntro />
+      </MemoryRouter>
+    )
     expect(intro()).not.toBeInTheDocument()
   })
 })
