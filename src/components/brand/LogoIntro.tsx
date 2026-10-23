@@ -2,9 +2,6 @@ import { useEffect, useState } from "react"
 import { LOGO_SRC } from "./Logo"
 import { useReducedMotion } from "../../hooks/useReducedMotion"
 
-const STORAGE_KEY = "112-market-intro-seen"
-
-/** The sequence: fade and scale the logo in, hold it, then fade the overlay out. */
 const FADE_IN_MS = 600
 const HOLD_MS = 500
 const FADE_OUT_MS = 700
@@ -19,21 +16,6 @@ const SAFETY_MARGIN_MS = 150
 const EASE_IN = "cubic-bezier(0.22, 1, 0.36, 1)" // smooth deceleration, no overshoot
 const EASE_OUT = "cubic-bezier(0.4, 0, 0.2, 1)"
 
-function hasSeenIntro(): boolean {
-  try {
-    return window.sessionStorage.getItem(STORAGE_KEY) === "1"
-  } catch {
-    return false
-  }
-}
-
-function markIntroSeen(): void {
-  try {
-    window.sessionStorage.setItem(STORAGE_KEY, "1")
-  } catch {
-    // Session storage unavailable: the intro simply plays again next visit.
-  }
-}
 
 /**
  * The full-screen 112 Market logo reveal (about 1.8 seconds).
@@ -42,7 +24,7 @@ function markIntroSeen(): void {
  *   600 to 1100ms  logo holds
  *   1100 to 1800ms overlay fades out and reveals the page
  *
- * - Plays once per browser-tab session (`sessionStorage`). Page-to-page fades
+ * - Plays on every page navigation (`sessionStorage`). Page-to-page fades
  *   are a separate, subtler effect handled by `PageTransition`.
  * - Whether to play is decided in the first render, so the storefront never
  *   flashes before the overlay appears. The logo is decoded first (capped at
@@ -57,10 +39,9 @@ function markIntroSeen(): void {
  */
 export default function LogoIntro() {
   const reducedMotion = useReducedMotion()
-  const [visible, setVisible] = useState(() => !reducedMotion && !hasSeenIntro())
+  const [visible, setVisible] = useState(() => !reducedMotion)
   const [ready, setReady] = useState(false)
 
-  // Mark as seen and wait (briefly) for the logo to be decoded.
   useEffect(() => {
     if (!visible) return
     if (reducedMotion) {
@@ -68,7 +49,6 @@ export default function LogoIntro() {
       return
     }
 
-    markIntroSeen()
 
     let active = true
     const begin = () => {

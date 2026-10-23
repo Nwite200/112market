@@ -37,12 +37,11 @@ describe("LogoIntro", () => {
     expect(intro()!.style.animation).toContain("1100ms")
   })
 
-  it("unmounts itself and records that it was seen", async () => {
+  it("unmounts itself after the animation completes", async () => {
     render(<LogoIntro />)
     await start()
     act(() => vi.advanceTimersByTime(1800 + 200))
     expect(intro()).not.toBeInTheDocument()
-    expect(window.sessionStorage.getItem(KEY)).toBe("1")
   })
 
   it("starts anyway if the logo takes too long to decode", () => {
@@ -70,10 +69,11 @@ describe("LogoIntro", () => {
     expect(intro()).not.toBeInTheDocument()
   })
 
-  it("does not show again in the same session", () => {
+  it("shows on every page navigation (not just first session)", () => {
+    // Previously seen flag no longer affects visibility — intro plays on every navigation
     window.sessionStorage.setItem(KEY, "1")
     render(<LogoIntro />)
-    expect(intro()).not.toBeInTheDocument()
+    expect(intro()).toBeInTheDocument()
   })
 
   it("is not left stuck on screen by React StrictMode's double effect run", async () => {
